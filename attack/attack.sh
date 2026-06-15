@@ -35,7 +35,7 @@ echo -e "${GREEN}[+] Usuários: admin, joao, maria, carlos, ana${NC}"
 # sem nenhum bloqueio porque o servidor vulnerável não tem rate limit
 # ------------------------------------------------------------------
 echo ""
-echo -e "${YELLOW}[*] ETAPA 1 — Força bruta com Hydra (HTTP POST)${NC}"
+echo -e "${YELLOW}[*] ETAPA 1: Força bruta com Hydra (HTTP POST)${NC}"
 echo -e "${CYAN}    Alvo: http://${TARGET_HOST}:${TARGET_PORT}/login${NC}"
 echo -e "${CYAN}    Wordlist: ${WORDLIST} ($(wc -l < "$WORDLIST") senhas)${NC}"
 echo ""
