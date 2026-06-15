@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  # Porta 3000 - sistema SEM proteções (alvo do ataque)
+  vulnerable:
+    build:
+      context: ./vulnerable
+    container_name: lab_vulnerable
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - lab_network
+
+  # Porta 3001 - sistema COM proteções (após mitigação)
+  secure:
+    build:
+      context: ./secure
+    container_name: lab_secure
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    networks:
+      - lab_network
+
+networks:
+  lab_network:
+    driver: bridge

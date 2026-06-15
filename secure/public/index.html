@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso ao Sistema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f5f4f0;
+      --card: #ffffff;
+      --border: #e0ddd6;
+      --text: #1a1a18;
+      --muted: #8a8880;
+      --accent: #1a5c96;
+      --accent-light: #eef4fb;
+      --input-bg: #fafaf8;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 36px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .logo svg { width: 20px; height: 20px; fill: #fff; }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      padding: 10px 13px;
+      margin-bottom: 18px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(26,92,150,0.08);
+    }
+
+    input::placeholder { color: #c4c2bc; }
+
+    #mfa-section { display: none; }
+    #mfa-section.visible { display: block; }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 11px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-top: 4px;
+    }
+
+    button:hover { opacity: 0.88; }
+
+    #result {
+      margin-top: 16px;
+      padding: 10px 13px;
+      border-radius: 7px;
+      font-size: 13px;
+      display: none;
+    }
+
+    #result.success { background: #edf7ed; color: #2e7d32; display: block; }
+    #result.error   { background: #fdecea; color: #c62828; display: block; }
+    #result.warning { background: var(--accent-light); color: var(--accent); display: block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <div class="logo">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM12 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/>
+        </svg>
+      </div>
+
+      <h1>Entrar na conta</h1>
+      <p class="subtitle">Acesse com seu usuário e senha</p>
+
+      <form id="loginForm">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" placeholder="Digite seu usuário" autocomplete="off">
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha">
+
+        <div id="mfa-section">
+          <label for="mfa_token">Código de verificação</label>
+          <input type="text" id="mfa_token" placeholder="000000" maxlength="6" pattern="\d{6}" inputmode="numeric">
+        </div>
+
+        <button type="submit">Entrar</button>
+      </form>
+
+      <div id="result"></div>
+
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const mfa_token = document.getElementById('mfa_token').value;
+      const result = document.getElementById('result');
+      const mfaSection = document.getElementById('mfa-section');
+
+      try {
+        const body = { username, password };
+        if (mfa_token) body.mfa_token = mfa_token;
+
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (res.status === 429) {
+          result.className = 'warning';
+          result.innerHTML = data.message;
+          return;
+        }
+
+        if (data.mfa_required) {
+          mfaSection.classList.add('visible');
+          result.className = 'warning';
+          result.innerHTML = 'Digite o código do seu aplicativo autenticador';
+          return;
+        }
+
+        if (data.success) {
+          result.className = 'success';
+          result.innerHTML = `Login realizado com sucesso — ${data.user.role}`;
+        } else {
+          result.className = 'error';
+          result.innerHTML = data.message;
+        }
+      } catch {
+        result.className = 'error';
+        result.innerHTML = 'Erro de conexão';
+      }
+    });
+  </script>
+</body>
+</html>
