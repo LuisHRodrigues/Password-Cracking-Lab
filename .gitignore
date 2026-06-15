@@ -1,0 +1,15 @@
+# Arquivos gerados pelo ataque - não versionar
+attack/hydra_results.txt
+attack/john.pot
+
+# Arquivos temporários do Hydra e John
+attack/hydra.restore
+attack/users.txt
+attack/hashes.txt
+
+# Banco de dados SQLite gerado em runtime
+vulnerable/users.db
+
+# Dependências Node
+vulnerable/node_modules/
+secure/node_modules/
