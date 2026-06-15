@@ -74,9 +74,9 @@ app.post("/login", (req, res) => {
   // Mensagem diferenciada por username/senha - ajuda enumeração de usuários
   const userExists = db.prepare("SELECT * FROM users WHERE username = ?").get(username);
   if (!userExists) {
-    return res.status(401).json({ success: false, message: "Usuário não encontrado" });
+    return res.status(200).json({ success: false, message: "Usuário não encontrado" });
   }
-  return res.status(401).json({ success: false, message: "Senha incorreta" });
+  return res.status(200).json({ success: false, message: "Senha incorreta" });
 });
 
 // Expõe hashes MD5 diretamente (simula dump de banco)
